@@ -14,6 +14,14 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
+import { Route as AuthenticatedAppSubscriptionRouteImport } from './routes/_authenticated/app.subscription'
+import { Route as AuthenticatedAppProfileRouteImport } from './routes/_authenticated/app.profile'
+import { Route as AuthenticatedAppOrdersRouteImport } from './routes/_authenticated/app.orders'
+import { Route as AuthenticatedAppOrderRouteImport } from './routes/_authenticated/app.order'
+import { Route as AuthenticatedAppNotificationsRouteImport } from './routes/_authenticated/app.notifications'
+import { Route as AuthenticatedAppLoyaltyRouteImport } from './routes/_authenticated/app.loyalty'
+import { Route as AuthenticatedAppSubscriptionNewRouteImport } from './routes/_authenticated/app.subscription.new'
+import { Route as AuthenticatedAppOrderIdRouteImport } from './routes/_authenticated/app.order.$id'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -39,17 +47,76 @@ const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppSubscriptionRoute =
+  AuthenticatedAppSubscriptionRouteImport.update({
+    id: '/subscription',
+    path: '/subscription',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppProfileRoute = AuthenticatedAppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppOrdersRoute = AuthenticatedAppOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppOrderRoute = AuthenticatedAppOrderRouteImport.update({
+  id: '/order',
+  path: '/order',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppNotificationsRoute =
+  AuthenticatedAppNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppLoyaltyRoute = AuthenticatedAppLoyaltyRouteImport.update({
+  id: '/loyalty',
+  path: '/loyalty',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppSubscriptionNewRoute =
+  AuthenticatedAppSubscriptionNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => AuthenticatedAppSubscriptionRoute,
+  } as any)
+const AuthenticatedAppOrderIdRoute = AuthenticatedAppOrderIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthenticatedAppOrderRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/app': typeof AuthenticatedAppRouteWithChildren
+  '/app/loyalty': typeof AuthenticatedAppLoyaltyRoute
+  '/app/notifications': typeof AuthenticatedAppNotificationsRoute
+  '/app/order': typeof AuthenticatedAppOrderRouteWithChildren
+  '/app/orders': typeof AuthenticatedAppOrdersRoute
+  '/app/profile': typeof AuthenticatedAppProfileRoute
+  '/app/subscription': typeof AuthenticatedAppSubscriptionRouteWithChildren
   '/app/': typeof AuthenticatedAppIndexRoute
+  '/app/order/$id': typeof AuthenticatedAppOrderIdRoute
+  '/app/subscription/new': typeof AuthenticatedAppSubscriptionNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/app/loyalty': typeof AuthenticatedAppLoyaltyRoute
+  '/app/notifications': typeof AuthenticatedAppNotificationsRoute
+  '/app/order': typeof AuthenticatedAppOrderRouteWithChildren
+  '/app/orders': typeof AuthenticatedAppOrdersRoute
+  '/app/profile': typeof AuthenticatedAppProfileRoute
+  '/app/subscription': typeof AuthenticatedAppSubscriptionRouteWithChildren
   '/app': typeof AuthenticatedAppIndexRoute
+  '/app/order/$id': typeof AuthenticatedAppOrderIdRoute
+  '/app/subscription/new': typeof AuthenticatedAppSubscriptionNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -57,20 +124,59 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
+  '/_authenticated/app/loyalty': typeof AuthenticatedAppLoyaltyRoute
+  '/_authenticated/app/notifications': typeof AuthenticatedAppNotificationsRoute
+  '/_authenticated/app/order': typeof AuthenticatedAppOrderRouteWithChildren
+  '/_authenticated/app/orders': typeof AuthenticatedAppOrdersRoute
+  '/_authenticated/app/profile': typeof AuthenticatedAppProfileRoute
+  '/_authenticated/app/subscription': typeof AuthenticatedAppSubscriptionRouteWithChildren
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
+  '/_authenticated/app/order/$id': typeof AuthenticatedAppOrderIdRoute
+  '/_authenticated/app/subscription/new': typeof AuthenticatedAppSubscriptionNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/app' | '/app/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/app'
+    | '/app/loyalty'
+    | '/app/notifications'
+    | '/app/order'
+    | '/app/orders'
+    | '/app/profile'
+    | '/app/subscription'
+    | '/app/'
+    | '/app/order/$id'
+    | '/app/subscription/new'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/app'
+  to:
+    | '/'
+    | '/auth'
+    | '/app/loyalty'
+    | '/app/notifications'
+    | '/app/order'
+    | '/app/orders'
+    | '/app/profile'
+    | '/app/subscription'
+    | '/app'
+    | '/app/order/$id'
+    | '/app/subscription/new'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/app'
+    | '/_authenticated/app/loyalty'
+    | '/_authenticated/app/notifications'
+    | '/_authenticated/app/order'
+    | '/_authenticated/app/orders'
+    | '/_authenticated/app/profile'
+    | '/_authenticated/app/subscription'
     | '/_authenticated/app/'
+    | '/_authenticated/app/order/$id'
+    | '/_authenticated/app/subscription/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -116,14 +222,110 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/subscription': {
+      id: '/_authenticated/app/subscription'
+      path: '/subscription'
+      fullPath: '/app/subscription'
+      preLoaderRoute: typeof AuthenticatedAppSubscriptionRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/profile': {
+      id: '/_authenticated/app/profile'
+      path: '/profile'
+      fullPath: '/app/profile'
+      preLoaderRoute: typeof AuthenticatedAppProfileRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/orders': {
+      id: '/_authenticated/app/orders'
+      path: '/orders'
+      fullPath: '/app/orders'
+      preLoaderRoute: typeof AuthenticatedAppOrdersRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/order': {
+      id: '/_authenticated/app/order'
+      path: '/order'
+      fullPath: '/app/order'
+      preLoaderRoute: typeof AuthenticatedAppOrderRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/notifications': {
+      id: '/_authenticated/app/notifications'
+      path: '/notifications'
+      fullPath: '/app/notifications'
+      preLoaderRoute: typeof AuthenticatedAppNotificationsRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/loyalty': {
+      id: '/_authenticated/app/loyalty'
+      path: '/loyalty'
+      fullPath: '/app/loyalty'
+      preLoaderRoute: typeof AuthenticatedAppLoyaltyRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/subscription/new': {
+      id: '/_authenticated/app/subscription/new'
+      path: '/new'
+      fullPath: '/app/subscription/new'
+      preLoaderRoute: typeof AuthenticatedAppSubscriptionNewRouteImport
+      parentRoute: typeof AuthenticatedAppSubscriptionRoute
+    }
+    '/_authenticated/app/order/$id': {
+      id: '/_authenticated/app/order/$id'
+      path: '/$id'
+      fullPath: '/app/order/$id'
+      preLoaderRoute: typeof AuthenticatedAppOrderIdRouteImport
+      parentRoute: typeof AuthenticatedAppOrderRoute
+    }
   }
 }
 
+interface AuthenticatedAppOrderRouteChildren {
+  AuthenticatedAppOrderIdRoute: typeof AuthenticatedAppOrderIdRoute
+}
+
+const AuthenticatedAppOrderRouteChildren: AuthenticatedAppOrderRouteChildren = {
+  AuthenticatedAppOrderIdRoute: AuthenticatedAppOrderIdRoute,
+}
+
+const AuthenticatedAppOrderRouteWithChildren =
+  AuthenticatedAppOrderRoute._addFileChildren(
+    AuthenticatedAppOrderRouteChildren,
+  )
+
+interface AuthenticatedAppSubscriptionRouteChildren {
+  AuthenticatedAppSubscriptionNewRoute: typeof AuthenticatedAppSubscriptionNewRoute
+}
+
+const AuthenticatedAppSubscriptionRouteChildren: AuthenticatedAppSubscriptionRouteChildren =
+  {
+    AuthenticatedAppSubscriptionNewRoute: AuthenticatedAppSubscriptionNewRoute,
+  }
+
+const AuthenticatedAppSubscriptionRouteWithChildren =
+  AuthenticatedAppSubscriptionRoute._addFileChildren(
+    AuthenticatedAppSubscriptionRouteChildren,
+  )
+
 interface AuthenticatedAppRouteChildren {
+  AuthenticatedAppLoyaltyRoute: typeof AuthenticatedAppLoyaltyRoute
+  AuthenticatedAppNotificationsRoute: typeof AuthenticatedAppNotificationsRoute
+  AuthenticatedAppOrderRoute: typeof AuthenticatedAppOrderRouteWithChildren
+  AuthenticatedAppOrdersRoute: typeof AuthenticatedAppOrdersRoute
+  AuthenticatedAppProfileRoute: typeof AuthenticatedAppProfileRoute
+  AuthenticatedAppSubscriptionRoute: typeof AuthenticatedAppSubscriptionRouteWithChildren
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
 }
 
 const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
+  AuthenticatedAppLoyaltyRoute: AuthenticatedAppLoyaltyRoute,
+  AuthenticatedAppNotificationsRoute: AuthenticatedAppNotificationsRoute,
+  AuthenticatedAppOrderRoute: AuthenticatedAppOrderRouteWithChildren,
+  AuthenticatedAppOrdersRoute: AuthenticatedAppOrdersRoute,
+  AuthenticatedAppProfileRoute: AuthenticatedAppProfileRoute,
+  AuthenticatedAppSubscriptionRoute:
+    AuthenticatedAppSubscriptionRouteWithChildren,
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
 }
 

@@ -37,7 +37,7 @@ function NewSub() {
       const { data, error } = await supabase.from("subscriptions").insert({
         customer_id: user!.id, plan, cylinder_size: size,
         usage_frequency_days: freq, billing_cycle: cycle,
-        monthly_price: monthly.toFixed(2),
+        monthly_price: Number(monthly.toFixed(2)),
         next_refill_date: new Date(Date.now() + freq * 86400_000).toISOString().slice(0, 10),
       }).select("*").single();
       if (error) throw error;
