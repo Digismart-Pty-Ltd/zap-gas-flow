@@ -1,0 +1,12 @@
+{
+  "name": "Zap Gas",
+  "short_name": "Zap Gas",
+  "description": "Gas delivered on-demand across the West Rand",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#14162b",
+  "theme_color": "#14162b",
+  "icons": [
+    { "src": "/favicon.ico", "sizes": "64x64", "type": "image/x-icon" }
+  ]
+}
