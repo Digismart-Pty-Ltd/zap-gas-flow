@@ -28,7 +28,7 @@ function AdminOrders() {
     if (error) toast.error(error.message); else { toast.success("Driver assigned"); qc.invalidateQueries({ queryKey: ["admin-orders"] }); }
   }
   async function setStatus(orderId: string, status: string) {
-    const { error } = await supabase.from("orders").update({ status }).eq("id", orderId);
+    const { error } = await supabase.from("orders").update({ status: status as any }).eq("id", orderId);
     if (error) toast.error(error.message); else qc.invalidateQueries({ queryKey: ["admin-orders"] });
   }
 
