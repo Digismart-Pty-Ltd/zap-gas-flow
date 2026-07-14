@@ -17,7 +17,7 @@ export function BottomNav() {
         {items.map((it) => {
           const active = it.exact ? pathname === it.to : pathname.startsWith(it.to);
           return (
-            <Link key={it.to} to={it.to} className={`flex flex-col items-center gap-1 py-2.5 text-xs transition-colors ${active ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}>
+            <Link key={it.to} to={it.to as string} className={`flex flex-col items-center gap-1 py-2.5 text-xs transition-colors ${active ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}>
               <it.icon className={`h-5 w-5 ${active ? "text-accent" : ""}`} />
               <span className="text-[11px] font-medium">{it.label}</span>
             </Link>
