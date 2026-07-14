@@ -12,14 +12,18 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedDriverRouteImport } from './routes/_authenticated/driver'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
+import { Route as AuthenticatedDriverIndexRouteImport } from './routes/_authenticated/driver.index'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
+import { Route as AuthenticatedDriverHistoryRouteImport } from './routes/_authenticated/driver.history'
 import { Route as AuthenticatedAppSubscriptionRouteImport } from './routes/_authenticated/app.subscription'
 import { Route as AuthenticatedAppProfileRouteImport } from './routes/_authenticated/app.profile'
 import { Route as AuthenticatedAppOrdersRouteImport } from './routes/_authenticated/app.orders'
 import { Route as AuthenticatedAppOrderRouteImport } from './routes/_authenticated/app.order'
 import { Route as AuthenticatedAppNotificationsRouteImport } from './routes/_authenticated/app.notifications'
 import { Route as AuthenticatedAppLoyaltyRouteImport } from './routes/_authenticated/app.loyalty'
+import { Route as AuthenticatedDriverJobIdRouteImport } from './routes/_authenticated/driver.job.$id'
 import { Route as AuthenticatedAppSubscriptionNewRouteImport } from './routes/_authenticated/app.subscription.new'
 import { Route as AuthenticatedAppOrderIdRouteImport } from './routes/_authenticated/app.order.$id'
 
@@ -37,16 +41,33 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedDriverRoute = AuthenticatedDriverRouteImport.update({
+  id: '/driver',
+  path: '/driver',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAppRoute = AuthenticatedAppRouteImport.update({
   id: '/app',
   path: '/app',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDriverIndexRoute =
+  AuthenticatedDriverIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedDriverRoute,
+  } as any)
 const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedDriverHistoryRoute =
+  AuthenticatedDriverHistoryRouteImport.update({
+    id: '/history',
+    path: '/history',
+    getParentRoute: () => AuthenticatedDriverRoute,
+  } as any)
 const AuthenticatedAppSubscriptionRoute =
   AuthenticatedAppSubscriptionRouteImport.update({
     id: '/subscription',
@@ -79,6 +100,12 @@ const AuthenticatedAppLoyaltyRoute = AuthenticatedAppLoyaltyRouteImport.update({
   path: '/loyalty',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedDriverJobIdRoute =
+  AuthenticatedDriverJobIdRouteImport.update({
+    id: '/job/$id',
+    path: '/job/$id',
+    getParentRoute: () => AuthenticatedDriverRoute,
+  } as any)
 const AuthenticatedAppSubscriptionNewRoute =
   AuthenticatedAppSubscriptionNewRouteImport.update({
     id: '/new',
@@ -95,15 +122,19 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/app': typeof AuthenticatedAppRouteWithChildren
+  '/driver': typeof AuthenticatedDriverRouteWithChildren
   '/app/loyalty': typeof AuthenticatedAppLoyaltyRoute
   '/app/notifications': typeof AuthenticatedAppNotificationsRoute
   '/app/order': typeof AuthenticatedAppOrderRouteWithChildren
   '/app/orders': typeof AuthenticatedAppOrdersRoute
   '/app/profile': typeof AuthenticatedAppProfileRoute
   '/app/subscription': typeof AuthenticatedAppSubscriptionRouteWithChildren
+  '/driver/history': typeof AuthenticatedDriverHistoryRoute
   '/app/': typeof AuthenticatedAppIndexRoute
+  '/driver/': typeof AuthenticatedDriverIndexRoute
   '/app/order/$id': typeof AuthenticatedAppOrderIdRoute
   '/app/subscription/new': typeof AuthenticatedAppSubscriptionNewRoute
+  '/driver/job/$id': typeof AuthenticatedDriverJobIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -114,9 +145,12 @@ export interface FileRoutesByTo {
   '/app/orders': typeof AuthenticatedAppOrdersRoute
   '/app/profile': typeof AuthenticatedAppProfileRoute
   '/app/subscription': typeof AuthenticatedAppSubscriptionRouteWithChildren
+  '/driver/history': typeof AuthenticatedDriverHistoryRoute
   '/app': typeof AuthenticatedAppIndexRoute
+  '/driver': typeof AuthenticatedDriverIndexRoute
   '/app/order/$id': typeof AuthenticatedAppOrderIdRoute
   '/app/subscription/new': typeof AuthenticatedAppSubscriptionNewRoute
+  '/driver/job/$id': typeof AuthenticatedDriverJobIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -124,15 +158,19 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
+  '/_authenticated/driver': typeof AuthenticatedDriverRouteWithChildren
   '/_authenticated/app/loyalty': typeof AuthenticatedAppLoyaltyRoute
   '/_authenticated/app/notifications': typeof AuthenticatedAppNotificationsRoute
   '/_authenticated/app/order': typeof AuthenticatedAppOrderRouteWithChildren
   '/_authenticated/app/orders': typeof AuthenticatedAppOrdersRoute
   '/_authenticated/app/profile': typeof AuthenticatedAppProfileRoute
   '/_authenticated/app/subscription': typeof AuthenticatedAppSubscriptionRouteWithChildren
+  '/_authenticated/driver/history': typeof AuthenticatedDriverHistoryRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
+  '/_authenticated/driver/': typeof AuthenticatedDriverIndexRoute
   '/_authenticated/app/order/$id': typeof AuthenticatedAppOrderIdRoute
   '/_authenticated/app/subscription/new': typeof AuthenticatedAppSubscriptionNewRoute
+  '/_authenticated/driver/job/$id': typeof AuthenticatedDriverJobIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -140,15 +178,19 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/app'
+    | '/driver'
     | '/app/loyalty'
     | '/app/notifications'
     | '/app/order'
     | '/app/orders'
     | '/app/profile'
     | '/app/subscription'
+    | '/driver/history'
     | '/app/'
+    | '/driver/'
     | '/app/order/$id'
     | '/app/subscription/new'
+    | '/driver/job/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -159,24 +201,31 @@ export interface FileRouteTypes {
     | '/app/orders'
     | '/app/profile'
     | '/app/subscription'
+    | '/driver/history'
     | '/app'
+    | '/driver'
     | '/app/order/$id'
     | '/app/subscription/new'
+    | '/driver/job/$id'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/app'
+    | '/_authenticated/driver'
     | '/_authenticated/app/loyalty'
     | '/_authenticated/app/notifications'
     | '/_authenticated/app/order'
     | '/_authenticated/app/orders'
     | '/_authenticated/app/profile'
     | '/_authenticated/app/subscription'
+    | '/_authenticated/driver/history'
     | '/_authenticated/app/'
+    | '/_authenticated/driver/'
     | '/_authenticated/app/order/$id'
     | '/_authenticated/app/subscription/new'
+    | '/_authenticated/driver/job/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -208,6 +257,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/driver': {
+      id: '/_authenticated/driver'
+      path: '/driver'
+      fullPath: '/driver'
+      preLoaderRoute: typeof AuthenticatedDriverRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/app': {
       id: '/_authenticated/app'
       path: '/app'
@@ -215,12 +271,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/driver/': {
+      id: '/_authenticated/driver/'
+      path: '/'
+      fullPath: '/driver/'
+      preLoaderRoute: typeof AuthenticatedDriverIndexRouteImport
+      parentRoute: typeof AuthenticatedDriverRoute
+    }
     '/_authenticated/app/': {
       id: '/_authenticated/app/'
       path: '/'
       fullPath: '/app/'
       preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
       parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/driver/history': {
+      id: '/_authenticated/driver/history'
+      path: '/history'
+      fullPath: '/driver/history'
+      preLoaderRoute: typeof AuthenticatedDriverHistoryRouteImport
+      parentRoute: typeof AuthenticatedDriverRoute
     }
     '/_authenticated/app/subscription': {
       id: '/_authenticated/app/subscription'
@@ -263,6 +333,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/loyalty'
       preLoaderRoute: typeof AuthenticatedAppLoyaltyRouteImport
       parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/driver/job/$id': {
+      id: '/_authenticated/driver/job/$id'
+      path: '/job/$id'
+      fullPath: '/driver/job/$id'
+      preLoaderRoute: typeof AuthenticatedDriverJobIdRouteImport
+      parentRoute: typeof AuthenticatedDriverRoute
     }
     '/_authenticated/app/subscription/new': {
       id: '/_authenticated/app/subscription/new'
@@ -332,12 +409,29 @@ const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
 const AuthenticatedAppRouteWithChildren =
   AuthenticatedAppRoute._addFileChildren(AuthenticatedAppRouteChildren)
 
+interface AuthenticatedDriverRouteChildren {
+  AuthenticatedDriverHistoryRoute: typeof AuthenticatedDriverHistoryRoute
+  AuthenticatedDriverIndexRoute: typeof AuthenticatedDriverIndexRoute
+  AuthenticatedDriverJobIdRoute: typeof AuthenticatedDriverJobIdRoute
+}
+
+const AuthenticatedDriverRouteChildren: AuthenticatedDriverRouteChildren = {
+  AuthenticatedDriverHistoryRoute: AuthenticatedDriverHistoryRoute,
+  AuthenticatedDriverIndexRoute: AuthenticatedDriverIndexRoute,
+  AuthenticatedDriverJobIdRoute: AuthenticatedDriverJobIdRoute,
+}
+
+const AuthenticatedDriverRouteWithChildren =
+  AuthenticatedDriverRoute._addFileChildren(AuthenticatedDriverRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAppRoute: typeof AuthenticatedAppRouteWithChildren
+  AuthenticatedDriverRoute: typeof AuthenticatedDriverRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAppRoute: AuthenticatedAppRouteWithChildren,
+  AuthenticatedDriverRoute: AuthenticatedDriverRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
