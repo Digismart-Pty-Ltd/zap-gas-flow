@@ -8,8 +8,9 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
-import { Flame, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { Logo } from "@/components/logo";
 
 const searchSchema = z.object({
   mode: z.enum(["signin", "signup"]).optional(),
@@ -71,13 +72,10 @@ function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-secondary/40">
+    <div className="min-h-screen bg-background">
       <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4 py-10">
-        <Link to="/" className="mb-6 flex items-center justify-center gap-2 font-display text-xl font-bold">
-          <div className="grid h-9 w-9 place-items-center rounded-lg zap-accent-gradient">
-            <Flame className="h-5 w-5 text-primary" />
-          </div>
-          Zap Gas
+        <Link to="/" className="mb-8 flex items-center justify-center">
+          <Logo className="h-12 w-12" withWordmark />
         </Link>
         <Card>
           <CardHeader>

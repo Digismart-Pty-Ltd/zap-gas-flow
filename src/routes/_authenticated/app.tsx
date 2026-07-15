@@ -1,6 +1,7 @@
 import { Outlet, createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { BottomNav } from "@/components/bottom-nav";
-import { Bell, Flame, LogOut } from "lucide-react";
+import { Bell, LogOut } from "lucide-react";
+import { Logo } from "@/components/logo";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCurrentUser } from "@/hooks/use-session";
@@ -37,11 +38,8 @@ function AppShell() {
     <div className="min-h-screen bg-secondary/40 pb-24">
       <header className="sticky top-0 z-30 border-b bg-background/90 backdrop-blur">
         <div className="mx-auto flex max-w-md items-center justify-between px-4 py-3">
-          <Link to="/app" className="flex items-center gap-2 font-display font-bold">
-            <div className="grid h-8 w-8 place-items-center rounded-lg zap-accent-gradient">
-              <Flame className="h-4 w-4 text-primary" />
-            </div>
-            Zap Gas
+          <Link to="/app" className="flex items-center gap-2">
+            <Logo className="h-7 w-7" withWordmark />
           </Link>
           <div className="flex items-center gap-1">
             <Link to="/app/notifications">

@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Flame, Truck, Repeat, Gift, ArrowRight, MapPin } from "lucide-react";
 import { CYLINDER_LABEL, fmtDate, ORDER_STATUS_LABEL } from "@/lib/format";
+import heroFlame from "@/assets/hero-flame.jpg";
 
 export const Route = createFileRoute("/_authenticated/app/")({
   component: Home,
@@ -48,13 +49,17 @@ function Home() {
 
   return (
     <div className="space-y-5">
-      <div className="rounded-3xl border zap-gradient p-5 text-primary-foreground shadow-glow">
-        <p className="text-sm text-primary-foreground/70">Welcome back</p>
-        <h1 className="mt-0.5 text-2xl font-bold">Need gas today?</h1>
-        <p className="mt-1 text-sm text-primary-foreground/80">Order in under a minute. Delivered within 24 hours across the West Rand.</p>
-        <Link to="/app/order"><Button size="lg" variant="secondary" className="mt-4 w-full">
-          <Flame className="mr-2 h-5 w-5" /> Order gas now
-        </Button></Link>
+      <div className="relative overflow-hidden rounded-3xl border border-white/10 p-5 shadow-card">
+        <img src={heroFlame} alt="" className="absolute inset-0 h-full w-full object-cover opacity-60" width={1536} height={1024} />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/85" />
+        <div className="relative">
+          <p className="text-sm text-muted-foreground">Welcome back</p>
+          <h1 className="mt-0.5 text-2xl font-bold text-foreground">Need gas today?</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Order in under a minute. Delivered within 24 hours across the West Rand.</p>
+          <Link to="/app/order"><Button size="lg" className="mt-4 w-full">
+            <Flame className="mr-2 h-5 w-5" /> Order gas now
+          </Button></Link>
+        </div>
       </div>
 
       {activeOrder && (
