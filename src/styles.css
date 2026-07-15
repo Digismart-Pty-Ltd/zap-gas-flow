@@ -110,23 +110,37 @@
 }
 
 .dark {
-  --background: oklch(0.14 0.03 260);
-  --foreground: oklch(0.96 0.01 240);
-  --card: oklch(0.19 0.04 260);
-  --card-foreground: oklch(0.96 0.01 240);
-  --popover: oklch(0.19 0.04 260);
-  --popover-foreground: oklch(0.96 0.01 240);
-  --primary: oklch(0.88 0.20 130);
-  --primary-foreground: oklch(0.16 0.04 260);
-  --secondary: oklch(0.24 0.04 260);
-  --secondary-foreground: oklch(0.96 0.01 240);
-  --muted: oklch(0.22 0.03 260);
-  --muted-foreground: oklch(0.70 0.03 240);
-  --accent: oklch(0.88 0.20 130);
-  --accent-foreground: oklch(0.16 0.04 260);
+  --background: oklch(0 0 0);                   /* pure black */
+  --foreground: oklch(0.985 0 0);               /* white */
+  --card: oklch(0.09 0 0);                      /* near-black surface */
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.09 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);                  /* white primary buttons */
+  --primary-foreground: oklch(0 0 0);
+  --secondary: oklch(0.14 0 0);                 /* dark grey chip */
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.12 0 0);
+  --muted-foreground: oklch(0.68 0 0);
+  --accent: oklch(0.72 0.19 250);               /* electric flame blue */
+  --accent-foreground: oklch(0.985 0 0);
+  --success: oklch(0.72 0.18 155);
+  --success-foreground: oklch(0.10 0 0);
+  --warning: oklch(0.82 0.17 75);
+  --warning-foreground: oklch(0.10 0 0);
+  --destructive: oklch(0.62 0.24 25);
+  --destructive-foreground: oklch(0.985 0 0);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.75 0.15 130);
+  --ring: oklch(0.72 0.19 250);
+  --sidebar: oklch(0.04 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.72 0.19 250);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.12 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.72 0.19 250);
 }
 
 @layer base {
@@ -141,8 +155,8 @@
 }
 
 @utility zap-gradient {
-  background-image: linear-gradient(135deg, oklch(0.22 0.06 260), oklch(0.30 0.08 260));
+  background-image: linear-gradient(135deg, oklch(0.06 0 0), oklch(0.14 0.03 250));
 }
 @utility zap-accent-gradient {
-  background-image: linear-gradient(135deg, oklch(0.88 0.20 130), oklch(0.82 0.18 105));
+  background-image: linear-gradient(135deg, oklch(0.72 0.19 250), oklch(0.62 0.22 280));
 }

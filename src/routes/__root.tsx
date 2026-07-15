@@ -63,7 +63,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { name: "theme-color", content: "#14162b" },
+      { name: "theme-color", content: "#000000" },
       { title: "Zap Gas — Gas delivered to your door in West Rand" },
       { name: "description", content: "Zap Gas delivers 9kg, 19kg and 48kg cylinders across the West Rand within 24 hours. Subscribe for auto refills and earn a free cylinder every 10th order." },
       { name: "author", content: "Zap Gas" },
@@ -89,7 +89,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head><HeadContent /></head>
       <body>
         {children}
