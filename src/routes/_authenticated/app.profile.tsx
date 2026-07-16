@@ -1,15 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
-import { useCurrentUser } from "@/hooks/use-session";
+import { useCurrentUser, useMyRoles } from "@/hooks/use-session";
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { MapPin, Plus, Trash2, MessageSquare } from "lucide-react";
+import { MapPin, Plus, Trash2, MessageSquare, Shield, Truck } from "lucide-react";
 import { toast } from "sonner";
+import { grantMyselfRole } from "@/lib/dev-roles.functions";
 
 export const Route = createFileRoute("/_authenticated/app/profile")({
   component: Profile,
