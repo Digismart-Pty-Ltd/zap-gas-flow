@@ -1,17 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
+import { grantRoleByEmail } from "@/lib/dev-roles.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/drivers")({ component: Drivers });
 
 function Drivers() {
   const qc = useQueryClient();
   const [email, setEmail] = useState("");
+  const grant = useServerFn(grantRoleByEmail);
   const { data: drivers = [] } = useQuery({
     queryKey: ["admin-drivers"],
     queryFn: async () => {
@@ -22,12 +25,14 @@ function Drivers() {
 
   async function promote() {
     if (!email.trim()) return;
-    // Look up by email via profiles isn't possible without admin. Instead we assume email is user_id.
-    // We match by profile full_name/email is not stored; require user UUID for MVP.
-    const { data: profile } = await supabase.from("profiles").select("id").eq("id", email.trim()).maybeSingle();
-    if (!profile) { toast.error("Enter a valid user UUID (visible in Cloud > Users)"); return; }
-    const { error } = await supabase.from("user_roles").insert({ user_id: profile.id, role: "driver" });
-    if (error) toast.error(error.message); else { toast.success("Driver added"); qc.invalidateQueries({ queryKey: ["admin-drivers"] }); setEmail(""); }
+    try {
+      await grant({ data: { email: email.trim(), role: "driver" } });
+      toast.success(`${email} is now a driver`);
+      qc.invalidateQueries({ queryKey: ["admin-drivers"] });
+      setEmail("");
+    } catch (e: any) {
+      toast.error(e?.message ?? "Failed to grant driver role");
+    }
   }
 
   return (
