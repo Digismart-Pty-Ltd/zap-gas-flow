@@ -41,10 +41,10 @@ function Drivers() {
       <Card><CardContent className="space-y-3 p-5">
         <p className="text-sm font-semibold">Add driver</p>
         <div className="flex gap-2 max-w-lg">
-          <Input placeholder="User UUID" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Input placeholder="teammate@email.com" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           <Button onClick={promote}>Grant driver role</Button>
         </div>
-        <p className="text-xs text-muted-foreground">Find the user's UUID under Cloud → Users. In production you'd add an email lookup admin function.</p>
+        <p className="text-xs text-muted-foreground">Enter the teammate's account email. They must have signed up at least once.</p>
       </CardContent></Card>
 
       <Card><CardContent className="p-5">
