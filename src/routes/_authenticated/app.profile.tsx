@@ -20,10 +20,22 @@ export const Route = createFileRoute("/_authenticated/app/profile")({
 function Profile() {
   const { user } = useCurrentUser();
   const qc = useQueryClient();
+  const { data: roles = [] } = useMyRoles();
+  const grantRole = useServerFn(grantMyselfRole);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [newAddr, setNewAddr] = useState("");
   const [msg, setMsg] = useState("");
+
+  async function selfGrant(role: "admin" | "driver") {
+    try {
+      await grantRole({ data: { role } });
+      toast.success(`You are now a ${role}. Reload to see the new area.`);
+      qc.invalidateQueries({ queryKey: ["my-roles"] });
+    } catch (e: any) {
+      toast.error(e?.message ?? "Failed to grant role");
+    }
+  }
 
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
@@ -102,6 +114,25 @@ function Profile() {
             <Button variant="outline" className="w-full">WhatsApp</Button>
           </a>
         </div>
+      </CardContent></Card>
+
+      <Card className="border-accent/40"><CardContent className="space-y-3 p-5">
+        <p className="text-sm font-semibold">Dev tools · role testing</p>
+        <p className="text-xs text-muted-foreground">
+          Temporary self-service for pre-launch testing. Current roles:{" "}
+          <span className="font-mono">{roles.length ? roles.join(", ") : "customer"}</span>
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <Button size="sm" variant="outline" onClick={() => selfGrant("admin")} disabled={roles.includes("admin")}>
+            <Shield className="mr-2 h-4 w-4" /> Grant me admin
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => selfGrant("driver")} disabled={roles.includes("driver")}>
+            <Truck className="mr-2 h-4 w-4" /> Grant me driver
+          </Button>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          After granting, open <span className="font-mono">/admin</span> or <span className="font-mono">/driver</span> in the URL bar.
+        </p>
       </CardContent></Card>
     </div>
   );
