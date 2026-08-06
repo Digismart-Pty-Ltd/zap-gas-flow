@@ -20,6 +20,7 @@ import { Route as AuthenticatedDriverIndexRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedDriverHistoryRouteImport } from './routes/_authenticated/driver.history'
+import { Route as AuthenticatedAppSupportRouteImport } from './routes/_authenticated/app.support'
 import { Route as AuthenticatedAppSubscriptionRouteImport } from './routes/_authenticated/app.subscription'
 import { Route as AuthenticatedAppProfileRouteImport } from './routes/_authenticated/app.profile'
 import { Route as AuthenticatedAppOrdersRouteImport } from './routes/_authenticated/app.orders'
@@ -31,6 +32,7 @@ import { Route as AuthenticatedAdminSubscriptionsRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminOrdersRouteImport } from './routes/_authenticated/admin.orders'
 import { Route as AuthenticatedAdminLoyaltyRouteImport } from './routes/_authenticated/admin.loyalty'
 import { Route as AuthenticatedAdminDriversRouteImport } from './routes/_authenticated/admin.drivers'
+import { Route as AuthenticatedAdminCylindersRouteImport } from './routes/_authenticated/admin.cylinders'
 import { Route as AuthenticatedAdminCustomersRouteImport } from './routes/_authenticated/admin.customers'
 import { Route as AuthenticatedDriverJobIdRouteImport } from './routes/_authenticated/driver.job.$id'
 import { Route as AuthenticatedAppSubscriptionNewRouteImport } from './routes/_authenticated/app.subscription.new'
@@ -92,6 +94,11 @@ const AuthenticatedDriverHistoryRoute =
     path: '/history',
     getParentRoute: () => AuthenticatedDriverRoute,
   } as any)
+const AuthenticatedAppSupportRoute = AuthenticatedAppSupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
 const AuthenticatedAppSubscriptionRoute =
   AuthenticatedAppSubscriptionRouteImport.update({
     id: '/subscription',
@@ -154,6 +161,12 @@ const AuthenticatedAdminDriversRoute =
     path: '/drivers',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminCylindersRoute =
+  AuthenticatedAdminCylindersRouteImport.update({
+    id: '/cylinders',
+    path: '/cylinders',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminCustomersRoute =
   AuthenticatedAdminCustomersRouteImport.update({
     id: '/customers',
@@ -186,6 +199,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AuthenticatedAppRouteWithChildren
   '/driver': typeof AuthenticatedDriverRouteWithChildren
   '/admin/customers': typeof AuthenticatedAdminCustomersRoute
+  '/admin/cylinders': typeof AuthenticatedAdminCylindersRoute
   '/admin/drivers': typeof AuthenticatedAdminDriversRoute
   '/admin/loyalty': typeof AuthenticatedAdminLoyaltyRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersRoute
@@ -197,6 +211,7 @@ export interface FileRoutesByFullPath {
   '/app/orders': typeof AuthenticatedAppOrdersRoute
   '/app/profile': typeof AuthenticatedAppProfileRoute
   '/app/subscription': typeof AuthenticatedAppSubscriptionRouteWithChildren
+  '/app/support': typeof AuthenticatedAppSupportRoute
   '/driver/history': typeof AuthenticatedDriverHistoryRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/app/': typeof AuthenticatedAppIndexRoute
@@ -210,6 +225,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/customers': typeof AuthenticatedAdminCustomersRoute
+  '/admin/cylinders': typeof AuthenticatedAdminCylindersRoute
   '/admin/drivers': typeof AuthenticatedAdminDriversRoute
   '/admin/loyalty': typeof AuthenticatedAdminLoyaltyRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersRoute
@@ -221,6 +237,7 @@ export interface FileRoutesByTo {
   '/app/orders': typeof AuthenticatedAppOrdersRoute
   '/app/profile': typeof AuthenticatedAppProfileRoute
   '/app/subscription': typeof AuthenticatedAppSubscriptionRouteWithChildren
+  '/app/support': typeof AuthenticatedAppSupportRoute
   '/driver/history': typeof AuthenticatedDriverHistoryRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/app': typeof AuthenticatedAppIndexRoute
@@ -239,6 +256,7 @@ export interface FileRoutesById {
   '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
   '/_authenticated/driver': typeof AuthenticatedDriverRouteWithChildren
   '/_authenticated/admin/customers': typeof AuthenticatedAdminCustomersRoute
+  '/_authenticated/admin/cylinders': typeof AuthenticatedAdminCylindersRoute
   '/_authenticated/admin/drivers': typeof AuthenticatedAdminDriversRoute
   '/_authenticated/admin/loyalty': typeof AuthenticatedAdminLoyaltyRoute
   '/_authenticated/admin/orders': typeof AuthenticatedAdminOrdersRoute
@@ -250,6 +268,7 @@ export interface FileRoutesById {
   '/_authenticated/app/orders': typeof AuthenticatedAppOrdersRoute
   '/_authenticated/app/profile': typeof AuthenticatedAppProfileRoute
   '/_authenticated/app/subscription': typeof AuthenticatedAppSubscriptionRouteWithChildren
+  '/_authenticated/app/support': typeof AuthenticatedAppSupportRoute
   '/_authenticated/driver/history': typeof AuthenticatedDriverHistoryRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
@@ -268,6 +287,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/driver'
     | '/admin/customers'
+    | '/admin/cylinders'
     | '/admin/drivers'
     | '/admin/loyalty'
     | '/admin/orders'
@@ -279,6 +299,7 @@ export interface FileRouteTypes {
     | '/app/orders'
     | '/app/profile'
     | '/app/subscription'
+    | '/app/support'
     | '/driver/history'
     | '/admin/'
     | '/app/'
@@ -292,6 +313,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/sitemap.xml'
     | '/admin/customers'
+    | '/admin/cylinders'
     | '/admin/drivers'
     | '/admin/loyalty'
     | '/admin/orders'
@@ -303,6 +325,7 @@ export interface FileRouteTypes {
     | '/app/orders'
     | '/app/profile'
     | '/app/subscription'
+    | '/app/support'
     | '/driver/history'
     | '/admin'
     | '/app'
@@ -320,6 +343,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app'
     | '/_authenticated/driver'
     | '/_authenticated/admin/customers'
+    | '/_authenticated/admin/cylinders'
     | '/_authenticated/admin/drivers'
     | '/_authenticated/admin/loyalty'
     | '/_authenticated/admin/orders'
@@ -331,6 +355,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/orders'
     | '/_authenticated/app/profile'
     | '/_authenticated/app/subscription'
+    | '/_authenticated/app/support'
     | '/_authenticated/driver/history'
     | '/_authenticated/admin/'
     | '/_authenticated/app/'
@@ -426,6 +451,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDriverHistoryRouteImport
       parentRoute: typeof AuthenticatedDriverRoute
     }
+    '/_authenticated/app/support': {
+      id: '/_authenticated/app/support'
+      path: '/support'
+      fullPath: '/app/support'
+      preLoaderRoute: typeof AuthenticatedAppSupportRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
     '/_authenticated/app/subscription': {
       id: '/_authenticated/app/subscription'
       path: '/subscription'
@@ -503,6 +535,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminDriversRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/cylinders': {
+      id: '/_authenticated/admin/cylinders'
+      path: '/cylinders'
+      fullPath: '/admin/cylinders'
+      preLoaderRoute: typeof AuthenticatedAdminCylindersRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/customers': {
       id: '/_authenticated/admin/customers'
       path: '/customers'
@@ -536,6 +575,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminCustomersRoute: typeof AuthenticatedAdminCustomersRoute
+  AuthenticatedAdminCylindersRoute: typeof AuthenticatedAdminCylindersRoute
   AuthenticatedAdminDriversRoute: typeof AuthenticatedAdminDriversRoute
   AuthenticatedAdminLoyaltyRoute: typeof AuthenticatedAdminLoyaltyRoute
   AuthenticatedAdminOrdersRoute: typeof AuthenticatedAdminOrdersRoute
@@ -546,6 +586,7 @@ interface AuthenticatedAdminRouteChildren {
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminCustomersRoute: AuthenticatedAdminCustomersRoute,
+  AuthenticatedAdminCylindersRoute: AuthenticatedAdminCylindersRoute,
   AuthenticatedAdminDriversRoute: AuthenticatedAdminDriversRoute,
   AuthenticatedAdminLoyaltyRoute: AuthenticatedAdminLoyaltyRoute,
   AuthenticatedAdminOrdersRoute: AuthenticatedAdminOrdersRoute,
@@ -591,6 +632,7 @@ interface AuthenticatedAppRouteChildren {
   AuthenticatedAppOrdersRoute: typeof AuthenticatedAppOrdersRoute
   AuthenticatedAppProfileRoute: typeof AuthenticatedAppProfileRoute
   AuthenticatedAppSubscriptionRoute: typeof AuthenticatedAppSubscriptionRouteWithChildren
+  AuthenticatedAppSupportRoute: typeof AuthenticatedAppSupportRoute
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
 }
 
@@ -602,6 +644,7 @@ const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppProfileRoute: AuthenticatedAppProfileRoute,
   AuthenticatedAppSubscriptionRoute:
     AuthenticatedAppSubscriptionRouteWithChildren,
+  AuthenticatedAppSupportRoute: AuthenticatedAppSupportRoute,
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
 }
 
@@ -647,3 +690,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
