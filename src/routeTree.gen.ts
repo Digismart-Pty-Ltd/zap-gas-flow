@@ -29,6 +29,7 @@ import { Route as AuthenticatedAppNotificationsRouteImport } from './routes/_aut
 import { Route as AuthenticatedAppLoyaltyRouteImport } from './routes/_authenticated/app.loyalty'
 import { Route as AuthenticatedAdminSupportRouteImport } from './routes/_authenticated/admin.support'
 import { Route as AuthenticatedAdminSubscriptionsRouteImport } from './routes/_authenticated/admin.subscriptions'
+import { Route as AuthenticatedAdminRefillsRouteImport } from './routes/_authenticated/admin.refills'
 import { Route as AuthenticatedAdminOrdersRouteImport } from './routes/_authenticated/admin.orders'
 import { Route as AuthenticatedAdminLoyaltyRouteImport } from './routes/_authenticated/admin.loyalty'
 import { Route as AuthenticatedAdminDriversRouteImport } from './routes/_authenticated/admin.drivers'
@@ -143,6 +144,12 @@ const AuthenticatedAdminSubscriptionsRoute =
     path: '/subscriptions',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminRefillsRoute =
+  AuthenticatedAdminRefillsRouteImport.update({
+    id: '/refills',
+    path: '/refills',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminOrdersRoute =
   AuthenticatedAdminOrdersRouteImport.update({
     id: '/orders',
@@ -203,6 +210,7 @@ export interface FileRoutesByFullPath {
   '/admin/drivers': typeof AuthenticatedAdminDriversRoute
   '/admin/loyalty': typeof AuthenticatedAdminLoyaltyRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersRoute
+  '/admin/refills': typeof AuthenticatedAdminRefillsRoute
   '/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
   '/admin/support': typeof AuthenticatedAdminSupportRoute
   '/app/loyalty': typeof AuthenticatedAppLoyaltyRoute
@@ -229,6 +237,7 @@ export interface FileRoutesByTo {
   '/admin/drivers': typeof AuthenticatedAdminDriversRoute
   '/admin/loyalty': typeof AuthenticatedAdminLoyaltyRoute
   '/admin/orders': typeof AuthenticatedAdminOrdersRoute
+  '/admin/refills': typeof AuthenticatedAdminRefillsRoute
   '/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
   '/admin/support': typeof AuthenticatedAdminSupportRoute
   '/app/loyalty': typeof AuthenticatedAppLoyaltyRoute
@@ -260,6 +269,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/drivers': typeof AuthenticatedAdminDriversRoute
   '/_authenticated/admin/loyalty': typeof AuthenticatedAdminLoyaltyRoute
   '/_authenticated/admin/orders': typeof AuthenticatedAdminOrdersRoute
+  '/_authenticated/admin/refills': typeof AuthenticatedAdminRefillsRoute
   '/_authenticated/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
   '/_authenticated/admin/support': typeof AuthenticatedAdminSupportRoute
   '/_authenticated/app/loyalty': typeof AuthenticatedAppLoyaltyRoute
@@ -291,6 +301,7 @@ export interface FileRouteTypes {
     | '/admin/drivers'
     | '/admin/loyalty'
     | '/admin/orders'
+    | '/admin/refills'
     | '/admin/subscriptions'
     | '/admin/support'
     | '/app/loyalty'
@@ -317,6 +328,7 @@ export interface FileRouteTypes {
     | '/admin/drivers'
     | '/admin/loyalty'
     | '/admin/orders'
+    | '/admin/refills'
     | '/admin/subscriptions'
     | '/admin/support'
     | '/app/loyalty'
@@ -347,6 +359,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/drivers'
     | '/_authenticated/admin/loyalty'
     | '/_authenticated/admin/orders'
+    | '/_authenticated/admin/refills'
     | '/_authenticated/admin/subscriptions'
     | '/_authenticated/admin/support'
     | '/_authenticated/app/loyalty'
@@ -514,6 +527,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSubscriptionsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/refills': {
+      id: '/_authenticated/admin/refills'
+      path: '/refills'
+      fullPath: '/admin/refills'
+      preLoaderRoute: typeof AuthenticatedAdminRefillsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/orders': {
       id: '/_authenticated/admin/orders'
       path: '/orders'
@@ -579,6 +599,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminDriversRoute: typeof AuthenticatedAdminDriversRoute
   AuthenticatedAdminLoyaltyRoute: typeof AuthenticatedAdminLoyaltyRoute
   AuthenticatedAdminOrdersRoute: typeof AuthenticatedAdminOrdersRoute
+  AuthenticatedAdminRefillsRoute: typeof AuthenticatedAdminRefillsRoute
   AuthenticatedAdminSubscriptionsRoute: typeof AuthenticatedAdminSubscriptionsRoute
   AuthenticatedAdminSupportRoute: typeof AuthenticatedAdminSupportRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
@@ -590,6 +611,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminDriversRoute: AuthenticatedAdminDriversRoute,
   AuthenticatedAdminLoyaltyRoute: AuthenticatedAdminLoyaltyRoute,
   AuthenticatedAdminOrdersRoute: AuthenticatedAdminOrdersRoute,
+  AuthenticatedAdminRefillsRoute: AuthenticatedAdminRefillsRoute,
   AuthenticatedAdminSubscriptionsRoute: AuthenticatedAdminSubscriptionsRoute,
   AuthenticatedAdminSupportRoute: AuthenticatedAdminSupportRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,

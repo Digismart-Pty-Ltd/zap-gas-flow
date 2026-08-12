@@ -20,7 +20,12 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
   component: AuthPage,
-  head: () => ({ meta: [{ title: "Sign in — Zap Gas" }, { name: "description", content: "Sign in or create your Zap Gas account." }] }),
+  head: () => ({
+    meta: [
+      { title: "Sign in — Zap Gas" },
+      { name: "description", content: "Sign in or create your Zap Gas account." },
+    ],
+  }),
 });
 
 function AuthPage() {
@@ -39,11 +44,26 @@ function AuthPage() {
     setLoading(true);
     try {
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
-          email, password,
-          options: { data: { full_name: fullName }, emailRedirectTo: window.location.origin + "/app" },
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name: fullName },
+            emailRedirectTo: window.location.origin + "/app",
+          },
         });
         if (error) throw error;
+        if (!data.session) {
+          // No session back means either email confirmation is pending, or
+          // (for security) this email already exists and Supabase silently
+          // no-ops instead of erroring — either way there's nothing to sign
+          // in to yet.
+          toast.success(
+            "Check your email to confirm your account before signing in. If you already have an account with this email, sign in instead.",
+          );
+          setMode("signin");
+          return;
+        }
         toast.success("Account created! You're signed in.");
         goNext();
       } else {
@@ -62,8 +82,13 @@ function AuthPage() {
   const google = async () => {
     setLoading(true);
     try {
-      const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin + "/app" });
-      if (result.error) { toast.error(result.error.message ?? "Google sign-in failed"); return; }
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin + "/app",
+      });
+      if (result.error) {
+        toast.error(result.error.message ?? "Google sign-in failed");
+        return;
+      }
       if (result.redirected) return;
       goNext();
     } finally {
@@ -82,7 +107,13 @@ function AuthPage() {
             <CardTitle>{mode === "signup" ? "Create your account" : "Welcome back"}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Button type="button" variant="outline" className="w-full" onClick={google} disabled={loading}>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={google}
+              disabled={loading}
+            >
               Continue with Google
             </Button>
             <div className="relative text-center text-xs text-muted-foreground">
@@ -93,26 +124,68 @@ function AuthPage() {
               {mode === "signup" && (
                 <div className="space-y-1.5">
                   <Label htmlFor="fullName">Full name</Label>
-                  <Input id="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+                  <Input
+                    id="fullName"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                  />
                 </div>
               )}
               <div className="space-y-1.5">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <Input
+                  id="email"
+                  type="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" autoComplete={mode === "signup" ? "new-password" : "current-password"} value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
+                <Input
+                  id="password"
+                  type="password"
+                  autoComplete={mode === "signup" ? "new-password" : "current-password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                />
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : mode === "signup" ? "Create account" : "Sign in"}
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : mode === "signup" ? (
+                  "Create account"
+                ) : (
+                  "Sign in"
+                )}
               </Button>
             </form>
             <div className="text-center text-sm text-muted-foreground">
               {mode === "signup" ? (
-                <>Have an account? <button className="font-medium text-primary hover:underline" onClick={() => setMode("signin")}>Sign in</button></>
+                <>
+                  Have an account?{" "}
+                  <button
+                    className="font-medium text-primary hover:underline"
+                    onClick={() => setMode("signin")}
+                  >
+                    Sign in
+                  </button>
+                </>
               ) : (
-                <>New here? <button className="font-medium text-primary hover:underline" onClick={() => setMode("signup")}>Create an account</button></>
+                <>
+                  New here?{" "}
+                  <button
+                    className="font-medium text-primary hover:underline"
+                    onClick={() => setMode("signup")}
+                  >
+                    Create an account
+                  </button>
+                </>
               )}
             </div>
           </CardContent>
