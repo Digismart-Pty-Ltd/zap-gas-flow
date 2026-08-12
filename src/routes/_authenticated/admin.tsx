@@ -4,7 +4,7 @@ import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
   SidebarProvider, SidebarTrigger, SidebarHeader,
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, ShoppingBag, Repeat, Users, Truck, Gift, MessageSquare, LogOut, Flame } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, Repeat, Users, Truck, Gift, MessageSquare, LogOut, Flame, PackageSearch, CalendarClock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -21,6 +21,8 @@ const items = [
   { to: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
   { to: "/admin/orders", label: "Orders", icon: ShoppingBag },
   { to: "/admin/subscriptions", label: "Subscriptions", icon: Repeat },
+  { to: "/admin/refills", label: "Refills", icon: CalendarClock },
+  { to: "/admin/cylinders", label: "Cylinders", icon: PackageSearch },
   { to: "/admin/drivers", label: "Drivers", icon: Truck },
   { to: "/admin/customers", label: "Customers", icon: Users },
   { to: "/admin/loyalty", label: "Loyalty", icon: Gift },
