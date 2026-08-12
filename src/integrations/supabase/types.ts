@@ -93,7 +93,6 @@ export type Database = {
         Row: {
           credits: number
           customer_id: string
-          free_cylinder_ready: boolean
           free_cylinders_redeemed: number
           lifetime_earned: number
           updated_at: string
@@ -101,7 +100,6 @@ export type Database = {
         Insert: {
           credits?: number
           customer_id: string
-          free_cylinder_ready?: boolean
           free_cylinders_redeemed?: number
           lifetime_earned?: number
           updated_at?: string
@@ -109,66 +107,11 @@ export type Database = {
         Update: {
           credits?: number
           customer_id?: string
-          free_cylinder_ready?: boolean
           free_cylinders_redeemed?: number
           lifetime_earned?: number
           updated_at?: string
         }
         Relationships: []
-      }
-      cylinder_assets: {
-        Row: {
-          asset_tag: string
-          created_at: string
-          current_customer_id: string | null
-          id: string
-          last_order_id: string | null
-          notes: string | null
-          size: Database["public"]["Enums"]["cylinder_size"]
-          status: Database["public"]["Enums"]["cylinder_asset_status"]
-          subscription_id: string | null
-          updated_at: string
-        }
-        Insert: {
-          asset_tag: string
-          created_at?: string
-          current_customer_id?: string | null
-          id?: string
-          last_order_id?: string | null
-          notes?: string | null
-          size: Database["public"]["Enums"]["cylinder_size"]
-          status?: Database["public"]["Enums"]["cylinder_asset_status"]
-          subscription_id?: string | null
-          updated_at?: string
-        }
-        Update: {
-          asset_tag?: string
-          created_at?: string
-          current_customer_id?: string | null
-          id?: string
-          last_order_id?: string | null
-          notes?: string | null
-          size?: Database["public"]["Enums"]["cylinder_size"]
-          status?: Database["public"]["Enums"]["cylinder_asset_status"]
-          subscription_id?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "cylinder_assets_subscription_id_fkey"
-            columns: ["subscription_id"]
-            isOneToOne: false
-            referencedRelation: "subscriptions"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cylinder_assets_last_order_id_fkey"
-            columns: ["last_order_id"]
-            isOneToOne: false
-            referencedRelation: "orders"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       loyalty_events: {
         Row: {
@@ -415,7 +358,6 @@ export type Database = {
       subscription_refills: {
         Row: {
           created_at: string
-          free_cylinder_applied: boolean
           id: string
           order_id: string | null
           scheduled_date: string
@@ -424,7 +366,6 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          free_cylinder_applied?: boolean
           id?: string
           order_id?: string | null
           scheduled_date: string
@@ -433,7 +374,6 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          free_cylinder_applied?: boolean
           id?: string
           order_id?: string | null
           scheduled_date?: string
@@ -464,8 +404,6 @@ export type Database = {
           created_at: string
           customer_id: string
           cylinder_size: Database["public"]["Enums"]["cylinder_size"]
-          deposit_amount: number
-          deposit_payment_status: Database["public"]["Enums"]["payment_status"]
           id: string
           monthly_price: number
           next_refill_date: string
@@ -480,8 +418,6 @@ export type Database = {
           created_at?: string
           customer_id: string
           cylinder_size: Database["public"]["Enums"]["cylinder_size"]
-          deposit_amount?: number
-          deposit_payment_status?: Database["public"]["Enums"]["payment_status"]
           id?: string
           monthly_price?: number
           next_refill_date?: string
@@ -496,8 +432,6 @@ export type Database = {
           created_at?: string
           customer_id?: string
           cylinder_size?: Database["public"]["Enums"]["cylinder_size"]
-          deposit_amount?: number
-          deposit_payment_status?: Database["public"]["Enums"]["payment_status"]
           id?: string
           monthly_price?: number
           next_refill_date?: string
@@ -519,29 +453,23 @@ export type Database = {
       support_messages: {
         Row: {
           created_at: string
-          expires_at: string
           from_role: Database["public"]["Enums"]["app_role"]
           id: string
           message: string
-          read: boolean
           user_id: string
         }
         Insert: {
           created_at?: string
-          expires_at?: string
           from_role: Database["public"]["Enums"]["app_role"]
           id?: string
           message: string
-          read?: boolean
           user_id: string
         }
         Update: {
           created_at?: string
-          expires_at?: string
           from_role?: Database["public"]["Enums"]["app_role"]
           id?: string
           message?: string
-          read?: boolean
           user_id?: string
         }
         Relationships: []
@@ -579,54 +507,10 @@ export type Database = {
         }
         Returns: boolean
       }
-      assign_subscription_cylinders: {
-        Args: {
-          p_subscription_id: string
-          p_customer_id: string
-          p_size: Database["public"]["Enums"]["cylinder_size"]
-          p_qty: number
-        }
-        Returns: Database["public"]["Tables"]["cylinder_assets"]["Row"][]
-      }
-      redeem_loyalty_reward: {
-        Args: {
-          p_customer_id: string
-        }
-        Returns: Database["public"]["Tables"]["subscription_refills"]["Row"] | null
-      }
-      create_subscription_with_cylinders: {
-        Args: {
-          p_customer_id: string
-          p_plan: Database["public"]["Enums"]["subscription_plan"]
-          p_cylinder_size: Database["public"]["Enums"]["cylinder_size"]
-          p_usage_frequency_days: number
-          p_deposit_amount: number
-          p_address_id: string | null
-        }
-        Returns: Database["public"]["Tables"]["subscriptions"]["Row"]
-      }
-      generate_subscription_refill: {
-        Args: {
-          p_subscription_id: string
-        }
-        Returns: Database["public"]["Tables"]["subscription_refills"]["Row"]
-      }
-      fulfill_subscription_refill: {
-        Args: {
-          p_refill_id: string
-        }
-        Returns: Database["public"]["Tables"]["orders"]["Row"]
-      }
     }
     Enums: {
       app_role: "customer" | "driver" | "admin"
       billing_cycle: "monthly" | "quarterly" | "annual"
-      cylinder_asset_status:
-        | "in_stock"
-        | "with_customer"
-        | "in_transit"
-        | "maintenance"
-        | "retired"
       cylinder_size: "kg9" | "kg19" | "kg48"
       loyalty_event_type: "earn" | "redeem"
       order_status:
@@ -769,13 +653,6 @@ export const Constants = {
     Enums: {
       app_role: ["customer", "driver", "admin"],
       billing_cycle: ["monthly", "quarterly", "annual"],
-      cylinder_asset_status: [
-        "in_stock",
-        "with_customer",
-        "in_transit",
-        "maintenance",
-        "retired",
-      ],
       cylinder_size: ["kg9", "kg19", "kg48"],
       loyalty_event_type: ["earn", "redeem"],
       order_status: [
