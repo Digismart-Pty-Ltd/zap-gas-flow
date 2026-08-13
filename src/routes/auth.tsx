@@ -13,7 +13,7 @@ import { Link } from "@tanstack/react-router";
 import { Logo } from "@/components/logo";
 
 const searchSchema = z.object({
-  mode: z.enum(["signin", "signup"]).optional(),
+  mode: z.enum(["signin", "signup", "forgot"]).optional(),
   redirect: z.string().optional(),
 });
 
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const search = Route.useSearch();
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">(search.mode ?? "signin");
+  const [mode, setMode] = useState<"signin" | "signup" | "forgot">(search.mode ?? "signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -43,6 +43,15 @@ function AuthPage() {
     e.preventDefault();
     setLoading(true);
     try {
+      if (mode === "forgot") {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.origin + "/auth/reset-password",
+        });
+        if (error) throw error;
+        toast.success("If that email has an account, a reset link is on its way.");
+        setMode("signin");
+        return;
+      }
       if (mode === "signup") {
         const { data, error } = await supabase.auth.signUp({
           email,
@@ -104,22 +113,31 @@ function AuthPage() {
         </Link>
         <Card>
           <CardHeader>
-            <CardTitle>{mode === "signup" ? "Create your account" : "Welcome back"}</CardTitle>
+            <CardTitle>{mode === "signup" ? "Create your account" : mode === "forgot" ? "Reset your password" : "Welcome back"}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={google}
-              disabled={loading}
-            >
-              Continue with Google
-            </Button>
-            <div className="relative text-center text-xs text-muted-foreground">
-              <span className="relative z-10 bg-card px-2">or with email</span>
-              <div className="absolute left-0 top-1/2 h-px w-full bg-border" />
-            </div>
+            {mode !== "forgot" && (
+              <>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={google}
+                  disabled={loading}
+                >
+                  Continue with Google
+                </Button>
+                <div className="relative text-center text-xs text-muted-foreground">
+                  <span className="relative z-10 bg-card px-2">or with email</span>
+                  <div className="absolute left-0 top-1/2 h-px w-full bg-border" />
+                </div>
+              </>
+            )}
+            {mode === "forgot" && (
+              <p className="text-sm text-muted-foreground">
+                Enter the email on your account and we'll send you a link to reset your password.
+              </p>
+            )}
             <form className="space-y-3" onSubmit={submit}>
               {mode === "signup" && (
                 <div className="space-y-1.5">
@@ -143,30 +161,50 @@ function AuthPage() {
                   required
                 />
               </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  autoComplete={mode === "signup" ? "new-password" : "current-password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  minLength={6}
-                />
-              </div>
+              {mode !== "forgot" && (
+                <div className="space-y-1.5">
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    autoComplete={mode === "signup" ? "new-password" : "current-password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={6}
+                  />
+                </div>
+              )}
+              {mode === "signin" && (
+                <button
+                  type="button"
+                  className="text-right text-xs font-medium text-primary hover:underline"
+                  onClick={() => setMode("forgot")}
+                >
+                  Forgot password?
+                </button>
+              )}
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : mode === "signup" ? (
                   "Create account"
+                ) : mode === "forgot" ? (
+                  "Send reset link"
                 ) : (
                   "Sign in"
                 )}
               </Button>
             </form>
             <div className="text-center text-sm text-muted-foreground">
-              {mode === "signup" ? (
+              {mode === "forgot" ? (
+                <button
+                  className="font-medium text-primary hover:underline"
+                  onClick={() => setMode("signin")}
+                >
+                  Back to sign in
+                </button>
+              ) : mode === "signup" ? (
                 <>
                   Have an account?{" "}
                   <button

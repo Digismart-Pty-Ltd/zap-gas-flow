@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Check, Truck, Package, MapPin, Phone } from "lucide-react";
+import { ArrowLeft, Check, Truck, Package, MapPin, Phone, Navigation, ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CYLINDER_LABEL, ORDER_STATUS_LABEL, ORDER_STATUS_STEPS, fmtDateTime, zar } from "@/lib/format";
 import { useEffect } from "react";
@@ -10,6 +10,22 @@ import { useEffect } from "react";
 export const Route = createFileRoute("/_authenticated/app/order/$id")({
   component: OrderTrack,
 });
+
+// Straight-line distance in km between two lat/lng points.
+function distanceKm(lat1: number, lng1: number, lat2: number, lng2: number) {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function timeAgo(iso: string) {
+  const secs = Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 1000));
+  if (secs < 60) return `${secs}s ago`;
+  if (secs < 3600) return `${Math.floor(secs / 60)}m ago`;
+  return `${Math.floor(secs / 3600)}h ago`;
+}
 
 function OrderTrack() {
   const { id } = Route.useParams();
@@ -28,6 +44,27 @@ function OrderTrack() {
     refetchInterval: 15_000,
   });
 
+  const trackingLive = order?.status === "assigned" || order?.status === "en_route" || order?.status === "arriving";
+
+  const { data: driver } = useQuery({
+    queryKey: ["order-driver", order?.driver_id],
+    enabled: !!order?.driver_id,
+    queryFn: async () => (await supabase.from("profiles").select("full_name, phone").eq("id", order!.driver_id!).maybeSingle()).data,
+  });
+
+  const { data: driverLoc, refetch: refetchLoc } = useQuery({
+    queryKey: ["order-driver-loc", order?.driver_id],
+    enabled: !!order?.driver_id && trackingLive,
+    queryFn: async () => (await supabase.from("driver_locations").select("*").eq("driver_id", order!.driver_id!).maybeSingle()).data,
+    refetchInterval: 10_000,
+  });
+
+  const { data: pod } = useQuery({
+    queryKey: ["order-pod", id],
+    enabled: order?.status === "delivered",
+    queryFn: async () => (await supabase.from("proof_of_delivery").select("*").eq("order_id", id).maybeSingle()).data,
+  });
+
   useEffect(() => {
     const ch = supabase.channel(`order-${id}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "orders", filter: `id=eq.${id}` }, () => qc.invalidateQueries({ queryKey: ["order", id] }))
@@ -36,9 +73,18 @@ function OrderTrack() {
     return () => { supabase.removeChannel(ch); };
   }, [id, qc]);
 
+  useEffect(() => {
+    if (!order?.driver_id || !trackingLive) return;
+    const ch = supabase.channel(`driver-loc-${order.driver_id}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "driver_locations", filter: `driver_id=eq.${order.driver_id}` }, () => refetchLoc())
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [order?.driver_id, trackingLive, refetchLoc]);
+
   if (!order) return <div className="py-10 text-center text-muted-foreground">Loading order…</div>;
 
   const currentIdx = ORDER_STATUS_STEPS.indexOf(order.status as any);
+  const distance = driverLoc && order.lat && order.lng ? distanceKm(driverLoc.lat, driverLoc.lng, order.lat, order.lng) : null;
 
   return (
     <div className="space-y-4">
@@ -80,6 +126,54 @@ function OrderTrack() {
           </div>
         </CardContent>
       </Card>
+
+      {trackingLive && order.driver_id && (
+        <Card>
+          <CardContent className="space-y-3 p-5">
+            <p className="text-xs font-semibold uppercase text-muted-foreground">Your driver</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-semibold">{driver?.full_name ?? "Driver assigned"}</p>
+                {driver?.phone && (
+                  <a href={`tel:${driver.phone}`} className="flex items-center gap-1 text-sm text-accent-foreground hover:underline">
+                    <Phone className="h-3.5 w-3.5" /> {driver.phone}
+                  </a>
+                )}
+              </div>
+              {driver?.phone && (
+                <a href={`tel:${driver.phone}`}>
+                  <Button size="icon" variant="outline"><Phone className="h-4 w-4" /></Button>
+                </a>
+              )}
+            </div>
+            {driverLoc ? (
+              <div className="flex items-center gap-2 rounded-xl border bg-secondary/50 p-3 text-sm">
+                <Navigation className="h-4 w-4 shrink-0 text-accent-foreground" />
+                <div>
+                  {distance !== null && <p className="font-medium">{distance < 1 ? `${Math.round(distance * 1000)}m away` : `${distance.toFixed(1)}km away`}</p>}
+                  <p className="text-xs text-muted-foreground">Location updated {timeAgo(driverLoc.updated_at)}</p>
+                </div>
+              </div>
+            ) : (
+              <p className="text-xs text-muted-foreground">Waiting for driver's live location…</p>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {order.status === "delivered" && pod && (
+        <Card>
+          <CardContent className="space-y-3 p-5">
+            <p className="text-xs font-semibold uppercase text-muted-foreground">Proof of delivery</p>
+            {pod.photo_url ? (
+              <img src={pod.photo_url} alt="Delivery proof" className="w-full rounded-xl border object-cover" />
+            ) : (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground"><ImageIcon className="h-4 w-4" /> No photo attached</div>
+            )}
+            <p className="text-xs text-muted-foreground">Delivered {fmtDateTime(pod.delivered_at)}</p>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardContent className="space-y-3 p-5">
